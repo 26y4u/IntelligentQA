@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+     show-sql: true
+
+---
+#开发环境配置
+spring:
+  profiles: dev
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://60.205.216.102:3306/sqsx?characterEncoding=utf8&useSSL=true
+      username: root
+      password: mysqlzq
+
+server:
+  port: 8080
+
+
+---
+#测试环境配置
+spring:
+  profiles: test
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://60.205.216.102:3306/sqsx?characterEncoding=utf8&useSSL=true
+      username: root
+      password: mysqlzq
+
+server:
+  port: 8081
+  context-path: /demotest
+
+---
+#生产环境配置
+spring:
+  profiles: pro
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://60.205.216.102:3306/sqsx?characterEncoding=utf8&useSSL=true
+      username: root
+      password: root
+
+server:
+  port: 8082
+  context-path: /demopro
