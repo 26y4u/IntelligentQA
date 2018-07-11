@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.io.File;
 import java.util.List;
 
 
@@ -21,7 +23,13 @@ public interface FileRepository extends JpaRepository<FileBean,Integer>{
     public List<FileBean> findByUND(String user_name);
 
     @Query(value = "select * from sqsx_file where sqsx_file.isdel = 0 and sqsx_file.label_id =?1 ",nativeQuery = true)
-    public List<FileBean> findByLU(Integer label);
+    public List<FileBean> findByLU(String tag);
+
+    @Query(value="select * from sqsx_file where sqsx_file.md5=?1 and sqsx_file.isdel = 0",nativeQuery = true)
+    public FileBean findByMd5(String md5);
+
+    @Query(value = "select *from sqsx_file where sqsx_file.filename = ?1",nativeQuery = true)
+    public FileBean findByFileName(String filename);
 
     //public List<FileBean> findByUsersName(String username);
 }

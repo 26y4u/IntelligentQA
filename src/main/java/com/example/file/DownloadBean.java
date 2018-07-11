@@ -1,22 +1,30 @@
 package com.example.file;
 
-import io.swagger.models.auth.In;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.springframework.data.jpa.repository.Query;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.sql.Date;
 import java.sql.Time;
 
 @Entity
+@Table(name="sqsx_download")
 public class DownloadBean {
     @Id
     @GeneratedValue
-
+    @NotNull
+    @Column(name="id")
     private Integer id;
 
+    @Column(name="user_id")
     private Integer user_id;
+
+    @Column(name="file_id")
     private Integer file_id;
-    private Time time;
+
+    @Column(name="time")
+    private Date time;
+
+    @Column(name="isdel")
     private Integer isdel;
 
     public Integer getId() {
@@ -41,6 +49,14 @@ public class DownloadBean {
 
     public void setFile_id(Integer file_id) {
         this.file_id = file_id;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public Integer getIsdel() {

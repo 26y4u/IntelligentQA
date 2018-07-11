@@ -1,42 +1,17 @@
 package com.example.SqsxUser;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
-
-@Entity
-@Table(name="sqsx_user")
-public class SqsxUser implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue
-
-    @Column(name="id")
+public class InterFaceBean {
     private Integer id;
-
-    @Column(name="username")
     private String username;
-
-    @Column(name="password")
-    private int password;
-
-
-    @Column(name="type")
+    private int hashpassword;
+    private String newpassword;
+    private String password;
     private Integer type;
-
-    @Column(name="tag0")
     private String tag0;
-
-    @Column(name="tag1")
     private String tag1;
-
-    @Column(name="tag2")
     private String tag2;
-
-    @Column(name="isdel")
     private Integer isdel;
 
     public Integer getId() {
@@ -55,12 +30,24 @@ public class SqsxUser implements Serializable {
         this.username = username;
     }
 
-    public Integer getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(int password) {
-        this.password = password;
+    public int getHashpassword() {
+        return hashpassword;
+    }
+
+    public int getHashPassword() {
+        return hashpassword;
+    }
+
+    public void setHashPassword(int password) {
+        this.hashpassword = hashpassword;
+    }
+
+    public String getNewpassword() {
+        return newpassword;
     }
 
     public String getTag0() {
@@ -103,8 +90,7 @@ public class SqsxUser implements Serializable {
         this.isdel = isdel;
     }
 
-    public SqsxUser() {
+    public InterFaceBean() {
     }
-
 
 }
