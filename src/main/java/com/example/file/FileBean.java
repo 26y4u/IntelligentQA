@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="sqsx_file")
-public class FileBean extends UploadBean {
+public class FileBean  {
     @Id
     @GeneratedValue
     @NotNull

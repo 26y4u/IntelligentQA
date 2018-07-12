@@ -76,14 +76,20 @@ public class SqsxUserController {
     @PostMapping("sign/in")
     @Transactional   //事务操作
     public JsonResult login(@RequestBody InterFaceBean bean,HttpServletRequest request) {//登陆，验证结果返回：-1表示失败，1表示成功
-        SqsxUser sqsxUser = sqsxuserRepository.findByUsername(bean.getUsername());
+        SqsxUser sqsxUser = sqsxuserRepository.findByUserName(bean.getUsername());
         //System.out.println(sqsxUser.getId()+sqsxUser.getUsername()+sqsxUser.getPassword()+sqsxUser.getType()+sqsxUser.getIsdel());
-        if (sqsxUser!= null && toHash(bean.getPassword()) == sqsxUser.getPassword() && sqsxUser.getIsdel()!=1 && sqsxUser.getType()== bean.getType()) {
+        if (toHash(bean.getPassword())!= sqsxUser.getPassword())
+        {
+            return JsonResult.returnnull("用户与密码不匹配");
+        } else if(sqsxUser.getIsdel()==1) {
+            return JsonResult.refuseservice("该用户不存在");
+        }else if(sqsxUser.getType()!= bean.getType())
+        {
+            return JsonResult.refuseservice("用户类型选择错误");
+        }else{
             //在需要判断用户是否登录的地方,或者获取用户信息的地方,使用 SqsxUser user = request.getSession.getAttribute("currentUser")
             request.getSession().setAttribute("currentUser",sqsxUser);
             return JsonResult.ok(sqsxUser);
-        } else {
-            return JsonResult.refuse();//密码输入错误,状态码：400服务器已经理解请求，但是拒绝执行它。
         }
       //return 1;
     }

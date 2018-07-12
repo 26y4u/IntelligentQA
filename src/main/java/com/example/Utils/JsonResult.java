@@ -15,7 +15,7 @@ public class JsonResult implements Serializable {
     /** * 响应信息 */
      private String msg;
     /** * 响应数据 */
-    private Object data;
+    private  Object data;
 
     public JsonResult(Integer status, String msg, Object data) { this.status = status; this.msg = msg; this.data = data; }
     public static JsonResult build(Integer status,String msg,Object data){ return new JsonResult(status,msg,data); }
@@ -29,6 +29,7 @@ public class JsonResult implements Serializable {
     public static JsonResult errTokenMsg(String msg){ return new JsonResult(502,msg,null); }
     public static JsonResult errException(String msg){ return new JsonResult(555,msg,null); }
     public static JsonResult returnnull(String msg){ return new JsonResult(205,msg,null); }
+    public  static  JsonResult refuseservice(String msg){return new JsonResult(403,msg,null);}
     public JsonResult() { }
 
     @Override
