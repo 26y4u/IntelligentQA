@@ -11,24 +11,16 @@ import com.example.SqsxUser.*;
 
 @Entity
 @Table(name="sqsx_upload")
-public class UploadBean {
+public class UploadBean implements Serializable{
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
-    @NotNull
+
     @Column(name="id")
     private Integer id;
 
-//    @JoinTable(name = "file", joinColumns = {@JoinColumn(name = "file_id", referencedColumnName = "file_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "id", referencedColumnName = "file_id")}
-//            )
-//
-//    @JoinColumn(name = "user_id",foreignKey = @ForeignKey(name = "id"))
-
-@Column(name="user_id")
+    @Column(name="user_id")
     private Integer user_id;
-    //@ForeignKey()
-    //@ForeignKey
-    //@ManyToOne
 
     @Column(name="file_id")
     public Integer file_id;

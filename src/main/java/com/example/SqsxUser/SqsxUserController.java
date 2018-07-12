@@ -43,12 +43,14 @@ public class SqsxUserController {
     }
 
     @PostMapping("findByUsername")
+    @Transactional   //事务操作
     public SqsxUser findByUsername(@RequestParam("username") String username) {
         //通过用户名查找数据库中是否有该用户名
         return sqsxuserRepository.findByUsername(username);
     }
 
     @PostMapping("sign/up")
+    @Transactional   //事务操作
     public JsonResult save(@RequestBody InterFaceBean bean,HttpServletRequest request)
     {//增加一个用户
             if(findByUsername(bean.getUsername())!=null)
@@ -72,10 +74,11 @@ public class SqsxUserController {
     }
 
     @PostMapping("sign/in")
+    @Transactional   //事务操作
     public JsonResult login(@RequestBody InterFaceBean bean,HttpServletRequest request) {//登陆，验证结果返回：-1表示失败，1表示成功
-        SqsxUser sqsxUser = new SqsxUser();
+        SqsxUser sqsxUser = sqsxuserRepository.findByUsername(bean.getUsername());
         //System.out.println(sqsxUser.getId()+sqsxUser.getUsername()+sqsxUser.getPassword()+sqsxUser.getType()+sqsxUser.getIsdel());
-        if (sqsxUser!= null && toHash(bean.getPassword()) == sqsxUser.getPassword() && sqsxUser.getIsdel()!=1) {
+        if (sqsxUser!= null && toHash(bean.getPassword()) == sqsxUser.getPassword() && sqsxUser.getIsdel()!=1 && sqsxUser.getType()== bean.getType()) {
             //在需要判断用户是否登录的地方,或者获取用户信息的地方,使用 SqsxUser user = request.getSession.getAttribute("currentUser")
             request.getSession().setAttribute("currentUser",sqsxUser);
             return JsonResult.ok(sqsxUser);
@@ -85,7 +88,7 @@ public class SqsxUserController {
       //return 1;
     }
     @PostMapping("profile/modifyPass")
-    @Transactional   //事物操作
+    @Transactional   //事务操作
     public JsonResult updatepwd(@RequestBody InterFaceBean bean,HttpServletRequest request) {
         SqsxUser sqsxUser = (SqsxUser) request.getSession().getAttribute("currentUser");
         if(toHash(bean.getPassword()) == sqsxUser.getPassword() && sqsxUser.getIsdel()!=1)
@@ -99,7 +102,7 @@ public class SqsxUserController {
     }
 
     @PostMapping("profile/modifytag")
-    @Transactional   //事物操作
+    @Transactional   //事务操作
     public JsonResult updatetag(@RequestBody InterFaceBean bean,HttpServletRequest request) {
         SqsxUser sqsxUser = (SqsxUser) request.getSession().getAttribute("currentUser");
         sqsxUser.setTag0(bean.getTag0());

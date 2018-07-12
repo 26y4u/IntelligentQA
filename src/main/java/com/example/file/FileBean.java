@@ -21,8 +21,8 @@ public class FileBean extends UploadBean {
     @Column(name="filename")
     private String filename;
 
-    @Column(name="type_id")
-    private Integer type_id;
+    @Column(name="type")
+    private String type;
 
     @Column(name="tag0")
     private String tag0;
@@ -57,12 +57,12 @@ public class FileBean extends UploadBean {
         this.filename = filename;
     }
 
-    public Integer getType() {
-        return type_id;
+    public String getType() {
+        return type;
     }
 
-    public void setType(Integer type) {
-        this.type_id = type;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getTag0() {

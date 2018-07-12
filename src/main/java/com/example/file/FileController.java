@@ -59,36 +59,46 @@ public class FileController{
 
     @PostMapping("/findAll")
     public JsonResult getAll() {
-        return  JsonResult.ok(fileRepository.findAll());
+        return  JsonResult.ok(fileRepository.findAllF());
     }
 
     @Transactional
     @PostMapping("/findByUserNameUp")
-    public JsonResult findByUserNameUp(@RequestBody FileInterFacceBean bean){
-
-        SqsxUser user = sqsxuserRepository.findByUsername(bean.getUploader());//根据用户名找到唯一userid
-        List<UploadBean> upload =  uploadRepository.findByUserId(user.getId());//该用户上传的记录
-        if(upload==null||upload.size()==0){
-            return JsonResult.returnnull("该用户没有上传记录");
-        }
-        List<FileBean> fileList = new ArrayList<>();
-        for(int i =0;i<upload.size();i++){
-            UploadBean uploadrecord = upload.get(i);//取出fileid
-            fileList.add(fileRepository.findOne(uploadrecord.getFile_id()));
-        }
-        return JsonResult.ok(fileList);
-
+    public JsonResult findByUserNameUp(HttpServletRequest request){
+        SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
+       // SqsxUser user = sqsxuserRepository.findByUsername(bean.getUploader());//根据用户名找到唯一userid
+        List<UploadBean> upload =  uploadRepository.selectByUserId(user.getId());
+        return JsonResult.ok(uploadRepository.selectByUserId(user.getId()));
+        //List<UploadBean> upload1 =  uploadRepository.findByUser_id(user.getId());//该用户上传的记录
+//        if(upload==null||upload.size()==0){
+//            return JsonResult.returnnull("该用户没有上传记录");
+//        }else {
+//            List<FileBean> fileList = new ArrayList<>();
+//            for (int i = 0; i < upload.size(); i++) {
+//                UploadBean uploadrecord = upload.get(i);//取出fileid
+//                fileList.add(fileRepository.findOne(uploadrecord.getFile_id()));
+//            }
+//            return JsonResult.ok(fileList);
+//        }
     }
 
     @Transactional
     @PostMapping("/findByUserNameDown")
-    public JsonResult findByUserNameDown(@RequestBody String user_name){
-        //根据用户名，查找某个用户的下载记录
-        if(fileRepository.findByUND(user_name)!=null)//存在该用户的下载文件记录
+    public JsonResult findByUserNameDown(@RequestBody FileInterFacceBean bean,HttpServletRequest request){
+        //根据用户名，查找某个用户的下载记录(该用户自己的)
+        SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
+        List<DownloadBean> download =  downloadRepository.findByUserId(user.getId());
+        if(download==null||download.size()==0)//不存在该用户的下载文件记录
         {
-            return JsonResult.ok(fileRepository.findByUND(user_name));}
-        else{//服务器成功处理了请求，且没有返回任何内容
-            return JsonResult.returnnull("该用户没有下载文件记录");
+            return JsonResult.returnnull("该用户没有下载记录");
+        }
+        else{
+            List<FileBean> fileList = new ArrayList<>();
+            for (int i = 0; i < download.size(); i++) {
+                DownloadBean downloadrecord = download.get(i);//取出fileid
+                fileList.add(fileRepository.findOne(downloadrecord.getFile_id()));
+            }
+            return JsonResult.ok(fileList);
         }
          // return JsonResult.ok();
     }
@@ -124,12 +134,12 @@ public class FileController{
         //管理员不可上传资源
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
 
-        if (user.getType() != 2) {
+        if (user.getType() == 0 || user.getType() == 1) {
         try {
                 FileBean fileup = new FileBean();
                 fileup.setMd5(QiniuUtil.upload(file));//返回的是七牛云反馈的string的hash码
                 fileup.setFileName(bean.getTitle());//文件名
-                //file.setType(type);
+                fileup.setType(bean.getTitle().substring(bean.getTitle().lastIndexOf(".")));
                 fileup.setIsdel(0);
                 fileRepository.save(fileup);
 
@@ -159,7 +169,7 @@ public class FileController{
         //获取 下载者用户名，文件名，md5码先查文件id，再在upload表里down_num+1，在download表里加一行
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
 
-            UploadBean upload = uploadRepository.findByFileId( bean.getFileid());//根据fileid找到相应记录
+            UploadBean upload = uploadRepository.selectByFileId( bean.getFileid());//根据fileid找到相应记录
             int dn = upload.getDown_num();
             upload.setDown_num(dn + 1);
 

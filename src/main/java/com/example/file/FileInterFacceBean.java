@@ -3,12 +3,13 @@ package com.example.file;
 public class FileInterFacceBean {
 
     private Integer id;//资源id（数据库中文件的主码）
-    private  String title;//资源标题（可根据此完全匹配去数据库中查找文件）
+    private String title;//资源标题（可根据此完全匹配去数据库中查找文件）
     private Integer fileid;
-    private  String md5;
+    private String md5;
     private Integer downloads;//下载次数
     private String uploader;//上传者,用户名
-    private Integer type;//资源类型(word ppt pdf 视频
+    private String downloader;//下载者
+    private String type;//资源类型(word ppt pdf 视频
     private String tag0;//资源分类
     private String tag1;
     private String tag2;
@@ -46,7 +47,7 @@ public class FileInterFacceBean {
         return uploader;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
@@ -74,7 +75,7 @@ public class FileInterFacceBean {
         this.isdel = isdel;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
