@@ -31,5 +31,8 @@ public interface FileRepository extends JpaRepository<FileBean,Integer>{
     @Query(value = "select *from sqsx_file where sqsx_file.filename = ?1",nativeQuery = true)
     public FileBean findByFileName(String filename);
 
+    @Query(value = "select *from sqsx_file where sqsx_file.file_id = ?1",nativeQuery = true)
+    public FileBean findByFileId(Integer fileid);
+
     //public List<FileBean> findByUsersName(String username);
 }

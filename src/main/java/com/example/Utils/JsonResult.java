@@ -21,6 +21,7 @@ public class JsonResult implements Serializable {
     public static JsonResult build(Integer status,String msg,Object data){ return new JsonResult(status,msg,data); }
     public static JsonResult ok(Object data){ return new JsonResult(200,"ok",data); }
     public static JsonResult refuse(){ return new JsonResult(400,"refuse",null); }
+    public static JsonResult refuseforlimit(String msg){ return new JsonResult(400,msg,null); }
     public static JsonResult ok(){ return JsonResult.ok(null); }
     public static JsonResult errMsg(String msg){ return new JsonResult(500,msg,null); }
     public static JsonResult errFile(){ return new JsonResult(501,"error",null); }

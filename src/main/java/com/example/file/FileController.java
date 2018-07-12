@@ -46,11 +46,6 @@ public class FileController{
     @Autowired
     private SqsxUserService sqsxUserService;
 
-    //时间格式化
-
-
-
-
     @RequestMapping("a")
     public String a()
     {
@@ -123,52 +118,58 @@ public class FileController{
 
     @Transactional
     @RequestMapping(value = "Upload",method = RequestMethod.POST)
-    public JsonResult singleFileUpload(@RequestBody MultipartFile file,@RequestBody FileInterFacceBean bean,HttpServletRequest request) {
-        //后端通过MultiFile拿到前端传入的文件，并在代码中实现转存。
+    public JsonResult singleFileUpload(@RequestBody MultipartFile file,@RequestBody FileInterFacceBean bean,HttpServletRequest request)throws IOException {
+
+        //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码
+        //管理员不可上传资源
+        SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
+
+        if (user.getType() != 2) {
         try {
-            //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码,这样好像把file和upload表合在一起也可以。。。但还是先不改了
-            SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
+                FileBean fileup = new FileBean();
+                fileup.setMd5(QiniuUtil.upload(file));//返回的是七牛云反馈的string的hash码
+                fileup.setFileName(bean.getTitle());//文件名
+                //file.setType(type);
+                fileup.setIsdel(0);
+                fileRepository.save(fileup);
 
-            FileBean fileup = new FileBean();
-            fileup.setMd5(QiniuUtil.upload(file));//返回的是七牛云反馈的string的hash码
-            fileup.setFileName(bean.getTitle());//文件名
-            //file.setType(type);
-            fileup.setIsdel(0);
-            fileRepository.save(fileup);
+                UploadBean upload = new UploadBean();
+                upload.setUser_id(user.getId());
+                upload.setFile_id(fileup.getFile_id());
+                upload.setDown_num(0);
+                upload.setTime(GetTime.getTime());
+                upload.setIsdel(0);
+                uploadRepository.save(upload);
 
-            UploadBean upload = new UploadBean();
-            upload.setUser_id(user.getId());
-            upload.setFile_id(fileup.getFile_id());
-            upload.setDown_num(0);
-            upload.setTime(GetTime.getTime());
-            upload.setIsdel(0);
-            uploadRepository.save(upload);
+                return JsonResult.ok();
+            } catch(IllegalStateException e){
+                e.printStackTrace();
+                return JsonResult.refuse();
+            } catch(IOException e){
+                e.printStackTrace();
+                return JsonResult.refuse();
+            }
+            }else return JsonResult.refuseforlimit("您没有权限上传文件");
 
-            return JsonResult.ok();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            return JsonResult.refuse();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return JsonResult.refuse();
-        }
     }
 
     @Transactional
     @PostMapping("/DownLoad")
     public JsonResult DownLoad( @RequestBody FileInterFacceBean bean,HttpServletRequest request) throws IOException {
-        //获取 用户名，文件名，md5码先查文件id，再在upload表里down_num+1，在download表里加一行
+        //获取 下载者用户名，文件名，md5码先查文件id，再在upload表里down_num+1，在download表里加一行
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
-        UploadBean upload = uploadRepository.findByUserIdAndFileId(user.getId(),bean.getFileid());
-        int dn = upload.getDown_num();
-        upload.setDown_num(dn+1);
 
-        DownloadBean down = new DownloadBean();
-        down.setFile_id(bean.getFileid());
-        down.setUser_id(user.getId());
-        down.setTime(GetTime.getTime());
+            UploadBean upload = uploadRepository.findByFileId( bean.getFileid());//根据fileid找到相应记录
+            int dn = upload.getDown_num();
+            upload.setDown_num(dn + 1);
 
-        return JsonResult.ok(QiniuUtil.download(bean.getMd5()));
-    }
+            DownloadBean down = new DownloadBean();
+            down.setFile_id(bean.getFileid());
+        if(user!=null)
+            down.setUser_id(user.getId());
+        else down.setUser_id(null);//游客
+            down.setTime(GetTime.getTime());
+            return JsonResult.ok(QiniuUtil.download(bean.getMd5()));
+        }
 
 }
