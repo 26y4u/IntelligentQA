@@ -1,5 +1,6 @@
 package com.example.SqsxUser;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.Utils.JsonResult;
 import com.example.Utils.ToHash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,13 @@ public class SqsxUserController {
     private SqsxUserService sqsxUserService;
 
     @RequestMapping("a")
-    public String a()
+    public JsonResult a()
     {
-        return "hello";
+
+        JSONObject object = new JSONObject();
+        object.put("1","1");
+
+        return new JsonResult(200,"1",object);
     }
 
     @GetMapping("findAll")
