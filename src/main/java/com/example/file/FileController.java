@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 @RestController
 @javax.transaction.Transactional
 @Service
-@RequestMapping("/file")
+@RequestMapping("/resource")
 public class FileController {
 
 
@@ -56,11 +56,21 @@ public class FileController {
         return "file";
     }
 
+    @Transactional
     @PostMapping("/findAll")
     public JsonResult getAll() {
-        return JsonResult.ok(fileRepository.findAllF());
+        List<UploadBean> upload = uploadRepository.selectAll();
+        if (upload == null || upload.size() == 0) {
+            return JsonResult.returnnull("还没有上传文件的记录");
+        } else {
+            List<FileBean> fileList = new ArrayList<>();
+            for (int i = 0; i < upload.size(); i++) {
+                UploadBean uploadrecord = upload.get(i);//取出fileid
+                fileList.add(fileRepository.selectByFileId(uploadrecord.getFile_id()));
+            }
+            return JsonResult.ok(fileList);
+        }
     }
-
     @Transactional
     @PostMapping("/findByUserNameUp")
     public JsonResult findByUserNameUp(HttpServletRequest request) {
