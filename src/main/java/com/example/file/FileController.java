@@ -118,11 +118,11 @@ public class FileController {
     @Transactional
     @PostMapping("/findByTag")
     public JsonResult findByTag(@RequestBody FileInterFacceBean bean) {
-        if (fileRepository.findByTG2(bean.getTag2()) != null)//先看子标签（最细化的），如果小的分类下有文件则返回
+        if (bean.getTag2()!= null)//先看子标签（最细化的），如果小的分类下有文件则返回
             return JsonResult.ok(fileRepository.findByTG2(bean.getTag2()));
-        if (fileRepository.findByTG1(bean.getTag1()) != null)
+        if (bean.getTag1() != null)
             return JsonResult.ok(fileRepository.findByTG1(bean.getTag1()));
-        if (fileRepository.findByTG0(bean.getTag0()) != null)
+        if (bean.getTag0() != null)
             return JsonResult.ok(fileRepository.findByTG0(bean.getTag0()));
         else {//服务器成功处理了请求，且没有返回任何内容
             return JsonResult.returnnull("该标签下没有文件记录");
@@ -134,9 +134,8 @@ public class FileController {
     @PostMapping("/findByTitle")
     public JsonResult findByFilename(@RequestBody FileInterFacceBean bean) {
         //根据文件名查找文件
-        return JsonResult.ok(fileRepository.findbyName(bean.getTitle()));
-    }
-
+        return JsonResult.ok(fileRepository.selectByFileName(bean.getTitle()));
+}
 
     @Transactional
     @RequestMapping(value = "Upload", method = RequestMethod.POST)
@@ -148,10 +147,14 @@ public class FileController {
 
         if (user.getType() == 0 || user.getType() == 1) {
             try {
+                //7/13日更改需求：前端再给一个新的用户名（用户可自己在写一个文件名，在file表中存这个，文件类型也是用户自己选的在filename中加上）
                 FileBean fileup = new FileBean();
                 fileup.setMd5(QiniuUtil.upload(file));//返回的是七牛云反馈的string的hash码
-                fileup.setFileName(bean.getTitle());//文件名
-                fileup.setType(bean.getTitle().substring(bean.getTitle().lastIndexOf(".")));
+                String title = bean.getTitle();
+                fileup.setType(bean.getType());
+                fileup.setFileName(title + bean.getType());
+                //fileup.setFileName(bean.getTitle());//文件名
+                //fileup.setType(bean.getTitle().substring(bean.getTitle().lastIndexOf(".")));
                 fileup.setIsdel(0);
                 fileRepository.save(fileup);
 
@@ -186,7 +189,7 @@ public class FileController {
         int dn = upload.getDown_num();
         upload.setDown_num(dn + 1);
         uploadRepository.save(upload);
-
+        //return JsonResult.ok(upload);
         DownloadBean down = new DownloadBean();
         down.setFile_id(bean.getFileid());
         if (user != null)
