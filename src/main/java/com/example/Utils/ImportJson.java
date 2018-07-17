@@ -32,7 +32,7 @@ public class ImportJson {
 
     public JSONArray testAdd() {
 
-        String path = "C:\\Users\\Zhu\\Desktop\\data4.json";
+        String path = "C:\\Users\\Administrator\\Desktop\\data4.json";
         JSONArray jsonArray = null;
         try {
             String input = FileUtils.readFileToString(new File(path), "UTF-8");

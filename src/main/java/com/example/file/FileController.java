@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.Utils.GetTime;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
@@ -94,7 +95,7 @@ public class FileController {
     }
 
     @Transactional
-    @PostMapping("/findByUserNameDown")
+    @PostMapping("/searchByMyName")
     public JsonResult findByUserNameDown(@RequestBody FileInterFacceBean bean, HttpServletRequest request) {
         //根据用户名，查找某个用户的下载记录(该用户自己的)
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
@@ -118,7 +119,7 @@ public class FileController {
     @Transactional
     @PostMapping("/findByTag")
     public JsonResult findByTag(@RequestBody FileInterFacceBean bean) {
-        if (bean.getTag2()!= null)//先看子标签（最细化的），如果小的分类下有文件则返回
+        if ( bean.getTag2()!=null && bean.getTag2()!="全部")//先看子标签（最细化的），如果小的分类下有文件则返回
             return JsonResult.ok(fileRepository.findByTG2(bean.getTag2()));
         if (bean.getTag1() != null)
             return JsonResult.ok(fileRepository.findByTG1(bean.getTag1()));
@@ -138,23 +139,39 @@ public class FileController {
 }
 
     @Transactional
-    @RequestMapping(value = "Upload", method = RequestMethod.POST)
-    public JsonResult singleFileUpload(@RequestBody MultipartFile file, @RequestBody FileInterFacceBean bean, HttpServletRequest request) throws IOException {
+    @PostMapping("/search")
+    public JsonResult search(@RequestBody FileInterFacceBean bean) {
+        //根据文件名或关键字查找文件
+        List<FileBean> fileList = new ArrayList<>();
+        fileList.add(fileRepository.selectByFileName(bean.getTitle()));
+        SqsxUser user = sqsxuserRepository.findByUsername(bean.getUploader());//根据用户名找到唯一userid
+        List<UploadBean> upload = uploadRepository.selectByUserId(user.getId());
+        for (int i = 0; i < upload.size(); i++) {
+            UploadBean uploadrecord = upload.get(i);//取出fileid
+            fileList.add(fileRepository.selectByFileId(uploadrecord.getFile_id()));
+        }
+        return JsonResult.ok(fileList);
+    }
 
+
+    @Transactional
+    @RequestMapping(value = "upLoad", method = RequestMethod.POST)
+    public JsonResult singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("filename") String filename,@RequestParam("tag1") String tag0, @RequestParam("tag2") String tag1,@RequestParam("tag3") String tag2,@RequestParam("type") String type,@RequestBody FileInterFacceBean bean, HttpServletRequest request) throws IOException {
+        //文件名，真正传的文件，tag是搜索用的：有可能tag3是“所有”即显示tag2下的所有类型文件。type是用户选的文件类型。下载和预览是一个接口方法，type1是预览啥的
         //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码
         //管理员不可上传资源
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
-
         if (user.getType() == 0 || user.getType() == 1) {
             try {
                 //7/13日更改需求：前端再给一个新的用户名（用户可自己在写一个文件名，在file表中存这个，文件类型也是用户自己选的在filename中加上）
                 FileBean fileup = new FileBean();
-                fileup.setMd5(QiniuUtil.upload(file));//返回的是七牛云反馈的string的hash码
-                String title = bean.getTitle();
-                fileup.setType(bean.getType());
-                fileup.setFileName(title + bean.getType());
-                //fileup.setFileName(bean.getTitle());//文件名
-                //fileup.setType(bean.getTitle().substring(bean.getTitle().lastIndexOf(".")));
+                String title = filename;
+                fileup.setMd5(QiniuUtil.upload(file,title + type));//返回的是七牛云反馈的string的hash码
+                fileup.setType(type);
+                fileup.setTag0(tag0);
+                fileup.setTag1(tag1);
+                fileup.setTag2(tag2);
+                fileup.setFileName(title + type);
                 fileup.setIsdel(0);
                 fileRepository.save(fileup);
 
@@ -179,25 +196,32 @@ public class FileController {
     }
 
     @Transactional
-    @PostMapping("/DownLoad")
-    public JsonResult DownLoad(@RequestBody FileInterFacceBean bean, HttpServletRequest request) throws IOException {
-        //获取 下载者用户名，文件名，md5码先查文件id，再在upload表里down_num+1，在download表里加一行
+    @PostMapping("/getUrl")
+    public String DownLoad(@RequestBody FileInterFacceBean bean, HttpServletRequest request,HttpServletResponse response) throws IOException {
+        //获取 下载者用户名，type表示1预览2是下载。文件名，md5码先查文件id，再在upload表里down_num+1，在download表里加一行
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
-
-        //UploadBean upload = uploadRepository.selectByUseridAndFileid( user.getId(),bean.getFileid());//根据fileid找到相应记录
-        UploadBean upload = uploadRepository.selectByFileId(bean.getFileid());
-        int dn = upload.getDown_num();
-        upload.setDown_num(dn + 1);
-        uploadRepository.save(upload);
-        //return JsonResult.ok(upload);
-        DownloadBean down = new DownloadBean();
-        down.setFile_id(bean.getFileid());
-        if (user != null)
-            down.setUser_id(user.getId());
-        else down.setUser_id(0);//游客
-        down.setTime(GetTime.getTime());
-        downloadRepository.save(down);
-        return JsonResult.ok(QiniuUtil.download(bean.getMd5()));
+        if(bean.getUrlType()==2) {
+            //UploadBean upload = uploadRepository.selectByUseridAndFileid( user.getId(),bean.getFileid());//根据fileid找到相应记录
+            UploadBean upload = uploadRepository.selectByFileId(bean.getFileid());
+            int dn = upload.getDown_num();
+            upload.setDown_num(dn + 1);
+            uploadRepository.save(upload);
+            //return JsonResult.ok(upload);
+            DownloadBean down = new DownloadBean();
+            down.setFile_id(bean.getFileid());
+            if (user != null)
+                down.setUser_id(user.getId());
+            else down.setUser_id(0);//游客
+            down.setTime(GetTime.getTime());
+            downloadRepository.save(down);
+            FileBean file = fileRepository.selectByFileId(bean.getFileid());
+            response.setHeader("Content-Type","octet/stream");//setContentType("octet/stream");
+            response.setHeader("Content-Disposition","attachment:filename="+file.getFileName());
+            return QiniuUtil.download(file.getMd5());
+        }else {
+            FileBean file = fileRepository.selectByFileId(bean.getFileid());
+            return QiniuUtil.download(file.getMd5());
+        }
     }
 
     @PostMapping("/deletefile")

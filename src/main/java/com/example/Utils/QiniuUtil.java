@@ -37,25 +37,22 @@ public class QiniuUtil {
         return auth.uploadToken(BUCKET_NAME);
     }
 
-    public static String upload(MultipartFile file) throws IOException {
+    public static String upload(MultipartFile file,String filename) throws IOException {
         try {
             //调用put方法上传
-            //Response res = uploadManager.put(file.getBytes(), file.getName(), getUpToken());
+            Response res = uploadManager.put(file.getBytes(), filename, getUpToken());
             //key为null,则使用hash的值作为key
-            Response res = uploadManager.put("C:\\Users\\Zhu\\Desktop\\38.jpg", null, getUpToken());
+            //Response res = uploadManager.put("C:\\Users\\Zhu\\Desktop\\38.jpg", null, getUpToken());
             //System.out.print(res.bodyString());
             JSONObject object = JSONObject.parseObject(res.bodyString());
             String hash="";
             try{
                 hash = object.get("hash").toString();
-
             }catch (NullPointerException e){
                 e.printStackTrace();
                 return null;
             }
             return hash;
-
-
         } catch (QiniuException e) {
             e.printStackTrace();
             return null;
@@ -66,7 +63,6 @@ public class QiniuUtil {
         String encodedFileName = URLEncoder.encode(hash, "utf-8");
         String finalUrl = String.format("%s/%s", BUCKET_DOMAIN, encodedFileName);
         return finalUrl;
-
     }
 
 

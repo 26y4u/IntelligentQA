@@ -14,6 +14,7 @@ public class FileInterFacceBean {
     private String tag1;
     private String tag2;
     private Integer isdel;
+    private Integer urlType;
 
     public Integer getId() {
         return id;
@@ -102,5 +103,14 @@ public class FileInterFacceBean {
     public void setTag2(String tag2) {
         this.tag2 = tag2;
     }
+
+    public Integer getUrlType() {
+        return urlType;
+    }
+
+    public void setUrlType(Integer urlType) {
+        this.urlType = urlType;
+    }
+
     public FileInterFacceBean(){ }
 }

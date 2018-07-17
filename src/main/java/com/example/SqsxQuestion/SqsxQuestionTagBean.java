@@ -8,7 +8,8 @@ import javax.persistence.*;
 public class SqsxQuestionTagBean {
 
     @Id
-    @GeneratedValue
+    //@GeneratedValue
+    @Column(name = "id")
     private Integer id;
     @Column(name = "question_id")
     private Integer question_id;

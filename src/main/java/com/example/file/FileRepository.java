@@ -40,6 +40,6 @@ public interface FileRepository extends JpaRepository<FileBean,Integer>{
     @Query(value="select * from sqsx_file where id =?1",nativeQuery = true)
     public FileBean  selectByFileId(Integer fileid);
     @Query(value="select * from sqsx_file join sqsx_upload on sqsx_file.id = sqsx_upload.file_id and sqsx_file.filename=?1 order by sqsx_upload.time desc ",nativeQuery = true)
-    List<FileBean> selectByFileName(String filename);
+    public FileBean selectByFileName(String filename);
     //public List<FileBean> findByUsersName(String username);
 }
