@@ -14,7 +14,7 @@ public class SqsxQuestionBean implements Serializable {
 
 
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     private Integer id;
 
     @Column(name="user_id")

@@ -13,7 +13,7 @@ public class SqsxAnswerBean implements Serializable {
     private static final long serialVersionUID = 8881L;
 
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     private Integer id;
     @Column(name = "question_id")
     private Integer question_id;

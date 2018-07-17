@@ -1,6 +1,10 @@
 package com.example.SqsxUser;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.SqsxQuestion.SqsxAnswerRepository;
+import com.example.SqsxQuestion.SqsxQuestionRepository;
+import com.example.SqsxQuestion.SqsxQuestionTagRepository;
+import com.example.Utils.ImportJson;
 import com.example.Utils.JsonResult;
 import com.example.Utils.ToHash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +35,14 @@ public class SqsxUserController {
     private SqsxUserRepository sqsxuserRepository;
     @Autowired
     private SqsxUserService sqsxUserService;
+    @Autowired
+    private SqsxQuestionRepository questionRepository;
+    @Autowired
+    private SqsxAnswerRepository answerRepository;
+    @Autowired
+    private SqsxQuestionTagRepository questionTagRepository;
 
-    @RequestMapping("a")
-    public JsonResult a()
-    {
 
-        JSONObject object = new JSONObject();
-        object.put("1","1");
-
-        return new JsonResult(200,"1",object);
-    }
 
     @GetMapping("findAll")
     public List<SqsxUser> getAll() {
@@ -122,6 +124,11 @@ public class SqsxUserController {
         sqsxuserRepository.save(sqsxUser);
         return JsonResult.ok(sqsxUser);
     }
-
+    @GetMapping("testAdd")
+    @Transactional
+    public void testAdd() {
+        ImportJson importJson = new ImportJson(questionRepository,answerRepository,sqsxuserRepository,questionTagRepository);
+        importJson.testAdd();
+    }
 
 }
