@@ -69,20 +69,23 @@ public class FileController {
             FileBean file = new FileBean();
             SqsxUser user=new SqsxUser();
             for (int i = 0; i < upload.size(); i++) {
-                UploadBean uploadrecord = upload.get(i);//取出fileid
+                UploadBean uploadrecord = upload.get(i);
                 file = fileRepository.selectByFileId(uploadrecord.getFile_id());
-                user = sqsxuserRepository.findById(uploadrecord.getUser_id());
-                FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
-                //返回：文件名，文件id，下载量，上传用户名，标题，，类型
-                fileinertfacebean.setFileid(file.getId());
-                fileinertfacebean.setTitle(file.getFileName());
-                fileinertfacebean.setTag0(file.getTag0());
-                fileinertfacebean.setTag1(file.getTag1());
-                fileinertfacebean.setTag2(file.getTag2());
-                fileinertfacebean.setDownloads(uploadrecord.getDown_num());
-                fileinertfacebean.setUploader(user.getUsername());
-                fileinertfacebean.setType(file.getType());
-                fileinterface.add(fileinertfacebean);
+                if(file!=null) {
+                    user = sqsxuserRepository.findById(uploadrecord.getUser_id());
+                    FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+                    //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+                    fileinertfacebean.setId(file.getId());
+                    fileinertfacebean.setFileid(file.getId());
+                    fileinertfacebean.setTitle(file.getFileName());
+                    fileinertfacebean.setTag0(file.getTag0());
+                    fileinertfacebean.setTag1(file.getTag1());
+                    fileinertfacebean.setTag2(file.getTag2());
+                    fileinertfacebean.setDownloads(uploadrecord.getDown_num());
+                    fileinertfacebean.setUploader(user.getUsername());
+                    fileinertfacebean.setType(file.getType());
+                    fileinterface.add(fileinertfacebean);
+                }else ;
             }
             return JsonResult.ok(fileinterface);
         }
@@ -166,8 +169,8 @@ public class FileController {
         SqsxUser user = new SqsxUser();
         UploadBean upload = new UploadBean();
         for (int i = 0; i < filelist.size(); i++) {
-            FileBean afile = filelist.get(i);//取出fileid
-            upload = uploadRepository.selectByFileId(afile.getId());
+            file = filelist.get(i);//取出fileid
+            upload = uploadRepository.selectByFileId(file.getId());
             user = sqsxuserRepository.findById(upload.getUser_id());
             FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
             //返回：文件名，文件id，下载量，上传用户名，标题，，类型
@@ -194,6 +197,8 @@ public class FileController {
         UploadBean upload = new UploadBean();
         FileBean file = new FileBean();
         filelist = fileRepository.selectByFileName(bean.getTitle());
+
+
         for (int i = 0; i < filelist.size(); i++) {
             file = filelist.get(i);
             upload = uploadRepository.selectByFileId(file.getId());
@@ -211,6 +216,8 @@ public class FileController {
 
             fileinterface.add(fileinertfacebean);
         }
+
+
         return JsonResult.ok(fileinterface);
 }
 
@@ -225,88 +232,94 @@ public class FileController {
         UploadBean upload = new UploadBean();
         FileBean file = new FileBean();
         filelist = fileRepository.selectByFileName(bean.getTitle());
-        FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
 
-        for (int i = 0; i < filelist.size(); i++) {
-            file = filelist.get(i);
-            upload = uploadRepository.selectByFileId(file.getId());
-            user = sqsxuserRepository.findById(upload.getUser_id());
-            //返回：文件名，文件id，下载量，上传用户名，标题，，类型
-            fileinertfacebean.setFileid(file.getId());
-            fileinertfacebean.setTitle(file.getFileName());
-            fileinertfacebean.setTag0(file.getTag0());
-            fileinertfacebean.setTag1(file.getTag1());
-            fileinertfacebean.setTag2(file.getTag2());
-            fileinertfacebean.setDownloads(upload.getDown_num());
-            fileinertfacebean.setUploader(user.getUsername());
-            fileinertfacebean.setType(file.getType());
-            fileinterface.add(fileinertfacebean);
-        }
-
-        user = sqsxuserRepository.findByUserName(bean.getUploader());
-        List<UploadBean> uploadlist = uploadRepository.selectByUserId(user.getId());
-        if (uploadlist == null || uploadlist.size() == 0) ;
-            else {
-            FileBean afile = new FileBean();
-            for (int i = 0; i < uploadlist.size(); i++) {
-                UploadBean uploadrecord = uploadlist.get(i);//取出fileid
-                file = fileRepository.selectByFileId(uploadrecord.getFile_id());
-                user = sqsxuserRepository.findById(uploadrecord.getUser_id());
+        if(filelist != null) {
+            for (int i = 0; i < filelist.size(); i++) {
+                file = filelist.get(i);
+                upload = uploadRepository.selectByFileId(file.getId());
+                user = sqsxuserRepository.findById(upload.getUser_id());
+                FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
                 //返回：文件名，文件id，下载量，上传用户名，标题，，类型
                 fileinertfacebean.setFileid(file.getId());
                 fileinertfacebean.setTitle(file.getFileName());
                 fileinertfacebean.setTag0(file.getTag0());
                 fileinertfacebean.setTag1(file.getTag1());
                 fileinertfacebean.setTag2(file.getTag2());
-                fileinertfacebean.setDownloads(uploadrecord.getDown_num());
+                fileinertfacebean.setDownloads(upload.getDown_num());
                 fileinertfacebean.setUploader(user.getUsername());
                 fileinertfacebean.setType(file.getType());
+
                 fileinterface.add(fileinertfacebean);
             }
-        }
+        }else ;
+
+        user = sqsxuserRepository.findByUserName(bean.getUploader());
+        if(user!=null) {
+            List<UploadBean> uploadt = uploadRepository.selectByUserId(user.getId());
+            if (uploadt == null || uploadt.size() == 0) {
+                return JsonResult.returnnull("该用户没有上传文件的记录");
+            } else {
+                for (int i = 0; i < uploadt.size(); i++) {
+                    UploadBean uploadrecord = uploadt.get(i);//取出fileid
+                    FileBean filet = fileRepository.selectByFileId(uploadrecord.getFile_id());
+                    FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+                    //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+                    fileinertfacebean.setFileid(filet.getId());
+                    fileinertfacebean.setTitle(filet.getFileName());
+                    fileinertfacebean.setTag0(filet.getTag0());
+                    fileinertfacebean.setTag1(filet.getTag1());
+                    fileinertfacebean.setTag2(filet.getTag2());
+                    fileinertfacebean.setDownloads(uploadrecord.getDown_num());
+                    fileinertfacebean.setUploader(user.getUsername());
+                    fileinertfacebean.setType(filet.getType());
+                    fileinterface.add(fileinertfacebean);
+                }
+            }
+        }else ;
         return JsonResult.ok(fileinterface);
     }
 
 
     @Transactional
     @RequestMapping(value = "upLoad", method = RequestMethod.POST)
-    public JsonResult singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("filename") String filename,@RequestParam("tag1") String tag0, @RequestParam("tag2") String tag1,@RequestParam("tag3") String tag2,@RequestParam("type") String type,@RequestBody FileInterFacceBean bean, HttpServletRequest request) throws IOException {
+    public JsonResult singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("filename") String filename,@RequestParam("tag1") String tag0, @RequestParam("tag2") String tag1,@RequestParam("tag3") String tag2,@RequestParam("type") String type, HttpServletRequest request) throws IOException {
         //文件名，真正传的文件，tag是搜索用的：有可能tag3是“所有”即显示tag2下的所有类型文件。type是用户选的文件类型。下载和预览是一个接口方法，type1是预览啥的
         //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码
         //管理员不可上传资源
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
-        if (user.getType() == 0 || user.getType() == 1) {
-            try {
-                //7/13日更改需求：前端再给一个新的用户名（用户可自己在写一个文件名，在file表中存这个，文件类型也是用户自己选的在filename中加上）
-                FileBean fileup = new FileBean();
-                String title = filename;
-                fileup.setMd5(QiniuUtil.upload(file,title + type));//返回的是七牛云反馈的string的hash码
-                fileup.setType(type);
-                fileup.setTag0(tag0);
-                fileup.setTag1(tag1);
-                fileup.setTag2(tag2);
-                fileup.setFileName(title + type);
-                fileup.setIsdel(0);
-                fileRepository.save(fileup);
+        if (user != null) {
+            if (user.getType() == 0 || user.getType() == 1) {
+                try {
+                    //7/13日更改需求：前端再给一个新的用户名（用户可自己在写一个文件名，在file表中存这个，文件类型也是用户自己选的在filename中加上）
+                    FileBean fileup = new FileBean();
+                    String title = filename;
+                    fileup.setMd5(QiniuUtil.upload(file, title + type));//返回的是七牛云反馈的string的hash码
+                    fileup.setType(type);
+                    fileup.setTag0(tag0);
+                    fileup.setTag1(tag1);
+                    fileup.setTag2(tag2);
+                    fileup.setFileName(title + type);
+                    fileup.setIsdel(0);
+                    fileRepository.save(fileup);
 
-                UploadBean upload = new UploadBean();
-                upload.setUser_id(user.getId());
-                upload.setFile_id(fileup.getId());
-                upload.setDown_num(0);
-                upload.setTime(GetTime.getTime());
-                upload.setIsdel(0);
-                uploadRepository.save(upload);
+                    UploadBean upload = new UploadBean();
+                    upload.setUser_id(user.getId());
+                    upload.setFile_id(fileup.getId());
+                    upload.setDown_num(0);
+                    upload.setTime(GetTime.getTime());
+                    upload.setIsdel(0);
+                    uploadRepository.save(upload);
 
-                return JsonResult.ok(upload);
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-                return JsonResult.refuse();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return JsonResult.refuse();
-            }
-        } else return JsonResult.refuseforlimit("您没有权限上传文件");
-
+                    return JsonResult.ok(upload);
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    return JsonResult.refuse();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return JsonResult.refuse();
+                }
+            } else return JsonResult.refuseforlimit("您没有权限上传文件");
+        }else return JsonResult.refuseforlimit("请先登录");
     }
 
     @Transactional
