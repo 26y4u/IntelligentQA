@@ -64,12 +64,27 @@ public class FileController {
         if (upload == null || upload.size() == 0) {
             return JsonResult.returnnull("还没有上传文件的记录");
         } else {
-            List<FileBean> fileList = new ArrayList<>();
+            List<FileInterFacceBean> fileinterface = new ArrayList<>();
+            //根据upload中的记录去找file中的isdel不为1的文件，和user表中的用户名
+            FileBean file = new FileBean();
+            SqsxUser user=new SqsxUser();
             for (int i = 0; i < upload.size(); i++) {
                 UploadBean uploadrecord = upload.get(i);//取出fileid
-                fileList.add(fileRepository.selectByFileId(uploadrecord.getFile_id()));
+                file = fileRepository.selectByFileId(uploadrecord.getFile_id());
+                user = sqsxuserRepository.findById(uploadrecord.getUser_id());
+                FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+                //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+                fileinertfacebean.setFileid(file.getId());
+                fileinertfacebean.setTitle(file.getFileName());
+                fileinertfacebean.setTag0(file.getTag0());
+                fileinertfacebean.setTag1(file.getTag1());
+                fileinertfacebean.setTag2(file.getTag2());
+                fileinertfacebean.setDownloads(uploadrecord.getDown_num());
+                fileinertfacebean.setUploader(user.getUsername());
+                fileinertfacebean.setType(file.getType());
+                fileinterface.add(fileinertfacebean);
             }
-            return JsonResult.ok(fileList);
+            return JsonResult.ok(fileinterface);
         }
     }
     @Transactional
@@ -78,24 +93,33 @@ public class FileController {
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
         // SqsxUser user = sqsxuserRepository.findByUsername(bean.getUploader());//根据用户名找到唯一userid
         List<UploadBean> upload = uploadRepository.selectByUserId(user.getId());
-
         if (upload == null || upload.size() == 0) {
             return JsonResult.returnnull("该用户没有上传文件的记录");
         } else {
-            //System.out.println("1");
-            List<FileBean> fileList = new ArrayList<>();
+            List<FileInterFacceBean> fileinterface = new ArrayList<>();
+            FileBean file = new FileBean();
             for (int i = 0; i < upload.size(); i++) {
-
                 UploadBean uploadrecord = upload.get(i);//取出fileid
-                //System.out.println(i);
-                fileList.add(fileRepository.selectByFileId(uploadrecord.getFile_id()));
+                file = fileRepository.selectByFileId(uploadrecord.getFile_id());
+                user = sqsxuserRepository.findById(uploadrecord.getUser_id());
+                FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+                //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+                fileinertfacebean.setFileid(file.getId());
+                fileinertfacebean.setTitle(file.getFileName());
+                fileinertfacebean.setTag0(file.getTag0());
+                fileinertfacebean.setTag1(file.getTag1());
+                fileinertfacebean.setTag2(file.getTag2());
+                fileinertfacebean.setDownloads(uploadrecord.getDown_num());
+                fileinertfacebean.setUploader(user.getUsername());
+                fileinertfacebean.setType(file.getType());
+                fileinterface.add(fileinertfacebean);
             }
-            return JsonResult.ok(fileList);
+            return JsonResult.ok(fileinterface);
         }
     }
 
     @Transactional
-    @PostMapping("/searchByMyName")
+    @PostMapping("/searchByMyNameDown")
     public JsonResult findByUserNameDown(@RequestBody FileInterFacceBean bean, HttpServletRequest request) {
         //根据用户名，查找某个用户的下载记录(该用户自己的)
         SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
@@ -105,52 +129,142 @@ public class FileController {
             {
                 return JsonResult.returnnull("该用户没有下载记录");
             } else {
-                List<FileBean> fileList = new ArrayList<>();
+                List<FileInterFacceBean> fileinterface = new ArrayList<>();
+                FileBean file = new FileBean();
                 for (int i = 0; i < download.size(); i++) {
                     DownloadBean downloadrecord = download.get(i);//取出fileid
-                    fileList.add(fileRepository.selectByFileId(downloadrecord.getFile_id()));
+                    file = fileRepository.selectByFileId(downloadrecord.getFile_id());
+                    FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+                    //返回：文件名，文件id，上传用户名，类型
+                    fileinertfacebean.setFileid(file.getId());
+                    fileinertfacebean.setTitle(file.getFileName());
+                    fileinertfacebean.setTag0(file.getTag0());
+                    fileinertfacebean.setTag1(file.getTag1());
+                    fileinertfacebean.setTag2(file.getTag2());
+                    fileinertfacebean.setUploader(user.getUsername());
+                    fileinertfacebean.setType(file.getType());
+                    fileinterface.add(fileinertfacebean);
                 }
-                return JsonResult.ok(fileList);
+                return JsonResult.ok(fileinterface);
             }
-        } else return JsonResult.returnnull("该用户没有下载记录");
-        // return JsonResult.ok();
+            // return JsonResult.ok();
+        }else return JsonResult.refuseforlimit("游客请先登录");
     }
 
     @Transactional
     @PostMapping("/findByTag")
     public JsonResult findByTag(@RequestBody FileInterFacceBean bean) {
+        List<FileInterFacceBean> fileinterface = new ArrayList<>();
+        List<FileBean> filelist = new ArrayList<>();
         if ( bean.getTag2()!=null && bean.getTag2()!="全部")//先看子标签（最细化的），如果小的分类下有文件则返回
-            return JsonResult.ok(fileRepository.findByTG2(bean.getTag2()));
+            filelist = fileRepository.findByTG2(bean.getTag2());
         if (bean.getTag1() != null)
-            return JsonResult.ok(fileRepository.findByTG1(bean.getTag1()));
+            filelist = fileRepository.findByTG1(bean.getTag1());
         if (bean.getTag0() != null)
-            return JsonResult.ok(fileRepository.findByTG0(bean.getTag0()));
-        else {//服务器成功处理了请求，且没有返回任何内容
-            return JsonResult.returnnull("该标签下没有文件记录");
+            filelist = fileRepository.findByTG0(bean.getTag0());
+        FileBean file = new FileBean();
+        SqsxUser user = new SqsxUser();
+        UploadBean upload = new UploadBean();
+        for (int i = 0; i < filelist.size(); i++) {
+            FileBean afile = filelist.get(i);//取出fileid
+            upload = uploadRepository.selectByFileId(afile.getId());
+            user = sqsxuserRepository.findById(upload.getUser_id());
+            FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+            //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+            fileinertfacebean.setFileid(file.getId());
+            fileinertfacebean.setTitle(file.getFileName());
+            fileinertfacebean.setTag0(file.getTag0());
+            fileinertfacebean.setTag1(file.getTag1());
+            fileinertfacebean.setTag2(file.getTag2());
+            fileinertfacebean.setDownloads(upload.getDown_num());
+            fileinertfacebean.setUploader(user.getUsername());
+            fileinertfacebean.setType(file.getType());
+            fileinterface.add(fileinertfacebean);
         }
-        // return JsonResult.ok();
+        return JsonResult.ok(fileinterface);
     }
 
     @Transactional
     @PostMapping("/findByTitle")
     public JsonResult findByFilename(@RequestBody FileInterFacceBean bean) {
         //根据文件名查找文件
-        return JsonResult.ok(fileRepository.selectByFileName(bean.getTitle()));
+        List<FileInterFacceBean> fileinterface = new ArrayList<>();
+        List<FileBean> filelist = new ArrayList<>();
+        SqsxUser user = new SqsxUser();
+        UploadBean upload = new UploadBean();
+        FileBean file = new FileBean();
+        filelist = fileRepository.selectByFileName(bean.getTitle());
+        for (int i = 0; i < filelist.size(); i++) {
+            file = filelist.get(i);
+            upload = uploadRepository.selectByFileId(file.getId());
+            user = sqsxuserRepository.findById(upload.getUser_id());
+            FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+            //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+            fileinertfacebean.setFileid(file.getId());
+            fileinertfacebean.setTitle(file.getFileName());
+            fileinertfacebean.setTag0(file.getTag0());
+            fileinertfacebean.setTag1(file.getTag1());
+            fileinertfacebean.setTag2(file.getTag2());
+            fileinertfacebean.setDownloads(upload.getDown_num());
+            fileinertfacebean.setUploader(user.getUsername());
+            fileinertfacebean.setType(file.getType());
+
+            fileinterface.add(fileinertfacebean);
+        }
+        return JsonResult.ok(fileinterface);
 }
 
     @Transactional
     @PostMapping("/search")
     public JsonResult search(@RequestBody FileInterFacceBean bean) {
-        //根据文件名或关键字查找文件
-        List<FileBean> fileList = new ArrayList<>();
-        fileList.add(fileRepository.selectByFileName(bean.getTitle()));
-        SqsxUser user = sqsxuserRepository.findByUsername(bean.getUploader());//根据用户名找到唯一userid
-        List<UploadBean> upload = uploadRepository.selectByUserId(user.getId());
-        for (int i = 0; i < upload.size(); i++) {
-            UploadBean uploadrecord = upload.get(i);//取出fileid
-            fileList.add(fileRepository.selectByFileId(uploadrecord.getFile_id()));
+        //根据文件名或上传者查找文件
+        //根据文件名查找文件
+        List<FileInterFacceBean> fileinterface = new ArrayList<>();
+        List<FileBean> filelist = new ArrayList<>();
+        SqsxUser user = new SqsxUser();
+        UploadBean upload = new UploadBean();
+        FileBean file = new FileBean();
+        filelist = fileRepository.selectByFileName(bean.getTitle());
+        FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
+
+        for (int i = 0; i < filelist.size(); i++) {
+            file = filelist.get(i);
+            upload = uploadRepository.selectByFileId(file.getId());
+            user = sqsxuserRepository.findById(upload.getUser_id());
+            //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+            fileinertfacebean.setFileid(file.getId());
+            fileinertfacebean.setTitle(file.getFileName());
+            fileinertfacebean.setTag0(file.getTag0());
+            fileinertfacebean.setTag1(file.getTag1());
+            fileinertfacebean.setTag2(file.getTag2());
+            fileinertfacebean.setDownloads(upload.getDown_num());
+            fileinertfacebean.setUploader(user.getUsername());
+            fileinertfacebean.setType(file.getType());
+            fileinterface.add(fileinertfacebean);
         }
-        return JsonResult.ok(fileList);
+
+        user = sqsxuserRepository.findByUserName(bean.getUploader());
+        List<UploadBean> uploadlist = uploadRepository.selectByUserId(user.getId());
+        if (uploadlist == null || uploadlist.size() == 0) ;
+            else {
+            FileBean afile = new FileBean();
+            for (int i = 0; i < uploadlist.size(); i++) {
+                UploadBean uploadrecord = uploadlist.get(i);//取出fileid
+                file = fileRepository.selectByFileId(uploadrecord.getFile_id());
+                user = sqsxuserRepository.findById(uploadrecord.getUser_id());
+                //返回：文件名，文件id，下载量，上传用户名，标题，，类型
+                fileinertfacebean.setFileid(file.getId());
+                fileinertfacebean.setTitle(file.getFileName());
+                fileinertfacebean.setTag0(file.getTag0());
+                fileinertfacebean.setTag1(file.getTag1());
+                fileinertfacebean.setTag2(file.getTag2());
+                fileinertfacebean.setDownloads(uploadrecord.getDown_num());
+                fileinertfacebean.setUploader(user.getUsername());
+                fileinertfacebean.setType(file.getType());
+                fileinterface.add(fileinertfacebean);
+            }
+        }
+        return JsonResult.ok(fileinterface);
     }
 
 

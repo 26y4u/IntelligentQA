@@ -1,5 +1,8 @@
 package com.example.file;
 
+import javax.persistence.Entity;
+
+
 public class FileInterFacceBean {
 
     private Integer id;//资源id（数据库中文件的主码）
