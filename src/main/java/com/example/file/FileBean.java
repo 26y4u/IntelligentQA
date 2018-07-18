@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class FileBean  {
     @Id
     @GeneratedValue
-    @NotNull
+
     @Column(name="id")
     private Integer id;
 

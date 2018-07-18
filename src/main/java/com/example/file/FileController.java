@@ -254,7 +254,8 @@ public class FileController {
 
 
     @Transactional
-    @RequestMapping(value = "upLoad", method = RequestMethod.POST)
+    //@RequestMapping(value = "/upLoad", method = RequestMethod.POST)
+    @PostMapping("/upload")
     public JsonResult singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("filename") String filename,@RequestParam("tag1") String tag0, @RequestParam("tag2") String tag1,@RequestParam("tag3") String tag2,@RequestParam("type") String type, HttpServletRequest request) throws IOException {
         //文件名，真正传的文件，tag是搜索用的：有可能tag3是“所有”即显示tag2下的所有类型文件。type是用户选的文件类型。下载和预览是一个接口方法，type1是预览啥的
         //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码

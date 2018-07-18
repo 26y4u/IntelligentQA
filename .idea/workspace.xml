@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efda3d7f-f257-4334-9ea4-4d1acdaa9263" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/file/FileController.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,8 +28,8 @@
       <file leaf-file-name="FileController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
-              <caret line="261" column="39" selection-start-line="261" selection-start-column="39" selection-end-line="261" selection-end-column="39" />
+            <state relative-caret-position="113">
+              <caret line="281" selection-start-line="281" selection-end-line="281" />
             </state>
           </provider>
         </entry>
@@ -54,8 +55,8 @@
       <file leaf-file-name="FileBean.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
-              <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+            <state relative-caret-position="100">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
@@ -123,6 +124,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/Utils/QiniuUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileInterFacceBean.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" />
       </list>
     </option>
@@ -136,7 +138,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-7" />
     <option name="width" value="697" />
     <option name="height" value="745" />
@@ -304,12 +306,12 @@
       <updated>1531790563523</updated>
       <workItem from="1531790571455" duration="14552000" />
       <workItem from="1531818437437" duration="6960000" />
-      <workItem from="1531872958973" duration="3317000" />
+      <workItem from="1531872958973" duration="5023000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24829000" />
+    <option name="totallyTimeSpent" value="26535000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -321,8 +323,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="754" extended-state="7" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
@@ -334,18 +335,18 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
-      <window_info anchor="bottom" id="Debug" order="2" weight="0.71336555" />
+      <window_info active="true" anchor="bottom" id="Debug" order="2" visible="true" weight="0.46215782" />
       <window_info anchor="bottom" id="TODO" order="5" weight="0.32850242" />
-      <window_info anchor="bottom" id="Messages" order="9" weight="0.32850242" />
+      <window_info anchor="bottom" id="Messages" order="9" weight="0.27697262" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="3" />
       <window_info anchor="bottom" id="Java Enterprise" order="10" weight="0.32850242" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32850242" />
-      <window_info anchor="bottom" id="Run" order="14" weight="0.6489533" />
+      <window_info anchor="bottom" id="Run" order="14" weight="0.33011273" />
       <window_info anchor="bottom" id="Spring" order="13" weight="0.32850242" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.1078905" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2118003" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.12882447" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22239032" />
       <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info id="Web" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -367,7 +368,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <option name="time" value="11" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -592,13 +593,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/UploadBean.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -652,10 +646,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="261" column="39" selection-start-line="261" selection-start-column="39" selection-end-line="261" selection-end-column="39" />
+        <state relative-caret-position="113">
+          <caret line="281" selection-start-line="281" selection-end-line="281" />
         </state>
       </provider>
     </entry>
