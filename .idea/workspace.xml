@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efda3d7f-f257-4334-9ea4-4d1acdaa9263" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/SqsxUser/SqsxUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/SqsxUser/SqsxUserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/FileInterFacceBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/FileInterFacceBean.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/file/UploadBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/file/UploadBean.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/file/FileBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/file/FileController.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,20 +16,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SqsxQuestionController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/SqsxQuestion/SqsxQuestionController.java">
+      <file leaf-file-name="FileController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+            <state relative-caret-position="18">
+              <caret line="258" selection-start-line="258" selection-end-line="258" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileController.java">
+      <file leaf-file-name="CookieUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/Utils/CookieUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="89" column="46" selection-start-line="89" selection-start-column="46" selection-end-line="89" selection-end-column="46" />
+            <state relative-caret-position="-125">
+              <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -50,8 +46,8 @@
       <file leaf-file-name="SqsxUserController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/SqsxUser/SqsxUserController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+            <state relative-caret-position="219">
+              <caret line="117" column="9" lean-forward="true" selection-start-line="117" selection-start-column="9" selection-end-line="117" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -98,20 +94,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileRepository.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FileRepository.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="55" column="85" selection-start-line="55" selection-start-column="85" selection-end-line="55" selection-end-column="85" />
+            <state relative-caret-position="267">
+              <caret line="55" column="181" selection-start-line="55" selection-start-column="181" selection-end-line="55" selection-end-column="181" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileInterFacceBean.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FileInterFacceBean.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileInterFacceBean.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
+            <state relative-caret-position="60">
+              <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
               <folding>
                 <element signature="e#2000#2001#0" expanded="true" />
                 <element signature="e#2032#2033#0" expanded="true" />
@@ -137,10 +133,11 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/SqsxQuestion/SqsxQuestionBean.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/Utils/QiniuUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/file/UploadBean.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileInterFacceBean.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/SqsxUser/SqsxUserController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java" />
       </list>
     </option>
   </component>
@@ -321,12 +318,12 @@
       <updated>1531790563523</updated>
       <workItem from="1531790571455" duration="14552000" />
       <workItem from="1531818437437" duration="6960000" />
-      <workItem from="1531872958973" duration="9031000" />
+      <workItem from="1531872958973" duration="11855000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30543000" />
+    <option name="totallyTimeSpent" value="33367000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -351,7 +348,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
-      <window_info anchor="bottom" id="Debug" order="2" weight="0.42673108" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.12238325" />
       <window_info anchor="bottom" id="TODO" order="5" weight="0.32850242" />
       <window_info anchor="bottom" id="Messages" order="9" weight="0.27697262" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
@@ -359,9 +356,9 @@
       <window_info anchor="bottom" id="Java Enterprise" order="10" weight="0.32850242" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32850242" />
-      <window_info anchor="bottom" id="Run" order="14" visible="true" weight="0.085346214" />
+      <window_info anchor="bottom" id="Run" order="14" visible="true" weight="0.077294685" />
       <window_info anchor="bottom" id="Spring" order="13" weight="0.32850242" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.42512077" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.47504026" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22239032" />
       <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info id="Web" order="7" side_tool="true" />
@@ -384,7 +381,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="15" />
+      <option name="time" value="16" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -637,24 +634,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="55" column="85" selection-start-line="55" selection-start-column="85" selection-end-line="55" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileBean.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="93">
           <caret line="44" column="7" lean-forward="true" selection-start-line="44" selection-start-column="7" selection-end-line="44" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/SqsxUser/SqsxUserController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
         </state>
       </provider>
     </entry>
@@ -685,17 +668,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="89" column="46" selection-start-line="89" selection-start-column="46" selection-end-line="89" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileInterFacceBean.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
+        <state relative-caret-position="60">
+          <caret line="13" column="35" lean-forward="true" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
           <folding>
             <element signature="e#2000#2001#0" expanded="true" />
             <element signature="e#2032#2033#0" expanded="true" />
@@ -704,6 +680,34 @@
             <element signature="e#2327#2328#0" expanded="true" />
             <element signature="e#2354#2355#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/Utils/CookieUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-125">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/SqsxUser/SqsxUserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="117" column="9" lean-forward="true" selection-start-line="117" selection-start-column="9" selection-end-line="117" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="258" selection-start-line="258" selection-end-line="258" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/file/FileRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="55" column="181" selection-start-line="55" selection-start-column="181" selection-end-line="55" selection-end-column="181" />
         </state>
       </provider>
     </entry>

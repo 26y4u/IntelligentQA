@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.SqsxQuestion.SqsxAnswerRepository;
 import com.example.SqsxQuestion.SqsxQuestionRepository;
 import com.example.SqsxQuestion.SqsxQuestionTagRepository;
+import com.example.Utils.CookieUtil;
 import com.example.Utils.ImportJson;
 import com.example.Utils.JsonResult;
 import com.example.Utils.ToHash;
@@ -71,7 +72,9 @@ public class SqsxUserController {
                 sqsxUser.setType(bean.getType());
                 sqsxUser.setIsdel(0);
                 sqsxuserRepository.save(sqsxUser);
-                request.getSession().setAttribute("currentUser",sqsxUser);
+                CookieUtil.addCookie("username",sqsxUser.getUsername());
+                CookieUtil.addCookie("type",sqsxUser.getType());
+                CookieUtil.addCookie("id",sqsxUser.getId());
                 return JsonResult.ok(sqsxUser);
             }
     }
@@ -95,34 +98,56 @@ public class SqsxUserController {
             return JsonResult.refuseservice("用户类型选择错误");
         }else{
             //在需要判断用户是否登录的地方,或者获取用户信息的地方,使用 SqsxUser user = request.getSession.getAttribute("currentUser")
-            request.getSession().setAttribute("currentUser",sqsxUser);
+            //request.getSession().setAttribute("currentUser",sqsxUser);
+            CookieUtil.addCookie("username",sqsxUser.getUsername());
+            CookieUtil.addCookie("type",sqsxUser.getType());
+            CookieUtil.addCookie("id",sqsxUser.getId());
             return JsonResult.ok(sqsxUser);
+
+
         }
+
       //return 1;
     }
     @PostMapping("profile/modifyPass")
     @Transactional   //事务操作
     public JsonResult updatepwd(@RequestBody InterFaceBean bean,HttpServletRequest request) {
-        SqsxUser sqsxUser = (SqsxUser) request.getSession().getAttribute("currentUser");
-        if(toHash(bean.getPassword()) == sqsxUser.getPassword() && sqsxUser.getIsdel()!=1)
+        //SqsxUser sqsxUser = (SqsxUser) request.getSession().getAttribute("currentUser");
+        String username = CookieUtil.getCookie("username");
+        if(username==null)
         {
-            sqsxUser.setPassword(toHash(bean.getNewpassword()));
-            sqsxuserRepository.save(sqsxUser);
-            return JsonResult.ok(sqsxUser);//根据主键查找并更新
+            return JsonResult.refuseservice("请先登录");
         }else {
-            return JsonResult.refuse();//密码输入错误,状态码：400服务器已经理解请求，但是拒绝执行它。
+            //已登录,
+            username = username.replace('"', ' ').trim();
+            SqsxUser sqsxUser = sqsxuserRepository.findByUserName(username);
+            if (toHash(bean.getPassword()) == sqsxUser.getPassword() && sqsxUser.getIsdel() != 1) {
+                sqsxUser.setPassword(toHash(bean.getNewpassword()));
+                sqsxuserRepository.save(sqsxUser);
+                return JsonResult.ok(sqsxUser);//根据主键查找并更新
+            } else {
+                return JsonResult.refuse();//密码输入错误,状态码：400服务器已经理解请求，但是拒绝执行它。
+            }
         }
     }
 
     @PostMapping("profile/modifytag")
     @Transactional   //事务操作
     public JsonResult updatetag(@RequestBody InterFaceBean bean,HttpServletRequest request) {
-        SqsxUser sqsxUser = (SqsxUser) request.getSession().getAttribute("currentUser");
-        sqsxUser.setTag0(bean.getTag0());
-        sqsxUser.setTag1(bean.getTag1());
-        sqsxUser.setTag2(bean.getTag2());
-        sqsxuserRepository.save(sqsxUser);
-        return JsonResult.ok(sqsxUser);
+        String username = CookieUtil.getCookie("username");
+        if(username==null)
+        {
+            return JsonResult.refuseservice("请先登录");
+        }else {
+            //已登录,
+            username = username.replace('"', ' ').trim();
+            SqsxUser sqsxUser = sqsxuserRepository.findByUserName(username);
+            sqsxUser.setTag0(bean.getTag0());
+            sqsxUser.setTag1(bean.getTag1());
+            sqsxUser.setTag2(bean.getTag2());
+            sqsxuserRepository.save(sqsxUser);
+            return JsonResult.ok(sqsxUser);
+        }
     }
     @GetMapping("testAdd")
     @Transactional

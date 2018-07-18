@@ -53,6 +53,6 @@ public interface FileRepository extends JpaRepository<FileBean,Integer>{
     public List<FileBean> selectByFileName(String filename);
     //public List<FileBean> findByUsersName(String username);
 
-    @Query(value="select sqsx_file.id,sqsx_file.filename,sqsx_file.md5,sqsx_file.tag3,sqsx_file.tag1,sqsx_file.tag2,sqsx_file.type,sqsx_file.isdel from sqsx_file where filename = ?1 UNION select sqsx_file.id,sqsx_file.filename,sqsx_file.md5,sqsx_file.tag0,sqsx_file.tag1,sqsx_file.tag2,sqsx_file.type,sqsx_file.isdel from sqsx_file join sqsx_upload on sqsx_upload.file_id = sqsx_file.id join sqsx_user on sqsx_user.id = sqsx_upload.user_id where sqsx_user.username = ?2",nativeQuery = true)
+    @Query(value="select sqsx_file.id,sqsx_file.filename,sqsx_file.md5,sqsx_file.tag3,sqsx_file.tag1,sqsx_file.tag2,sqsx_file.type,sqsx_file.isdel from sqsx_file where filename = ?1 and sqsx_file.isdel=0 UNION select sqsx_file.id,sqsx_file.filename,sqsx_file.md5,sqsx_file.tag3,sqsx_file.tag1,sqsx_file.tag2,sqsx_file.type,sqsx_file.isdel from sqsx_file join sqsx_upload on sqsx_upload.file_id = sqsx_file.id join sqsx_user on sqsx_user.id = sqsx_upload.user_id where sqsx_user.username = ?2 and sqsx_upload.isdel=0 and sqsx_file.isdel=0",nativeQuery = true)
     public List<FileBean> selectbyfilenameorusername(String filename,String username);
 }
