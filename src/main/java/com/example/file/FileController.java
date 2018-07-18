@@ -259,8 +259,9 @@ public class FileController {
         //文件名，真正传的文件，tag是搜索用的：有可能tag3是“所有”即显示tag2下的所有类型文件。type是用户选的文件类型。下载和预览是一个接口方法，type1是预览啥的
         //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码
         //管理员不可上传资源
-        SqsxUser user = (SqsxUser) request.getSession().getAttribute("currentUser");
-        if (user != null) {
+        SqsxUser user = new SqsxUser();
+        if ((SqsxUser) request.getSession().getAttribute("currentUser") != null) {
+            user = (SqsxUser) request.getSession().getAttribute("currentUser");
             if (user.getType() == 0 || user.getType() == 1) {
                 try {
                     //7/13日更改需求：前端再给一个新的用户名（用户可自己在写一个文件名，在file表中存这个，文件类型也是用户自己选的在filename中加上）
