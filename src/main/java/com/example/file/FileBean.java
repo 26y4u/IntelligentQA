@@ -24,12 +24,12 @@ public class FileBean  {
     @Column(name="type")
     private String type;
 
-    @Column(name="tag0")
-    private String tag0;
     @Column(name="tag1")
     private String tag1;
     @Column(name="tag2")
     private String tag2;
+    @Column(name="tag3")
+    private String tag3;
 
     @Column(name="isdel")
     private Integer isdel;
@@ -65,12 +65,12 @@ public class FileBean  {
         this.type = type;
     }
 
-    public String getTag0() {
-        return tag0;
+    public String getTag3() {
+        return tag3;
     }
 
-    public void setTag0(String tag0) {
-        this.tag0 = tag0;
+    public void setTag3(String tag3) {
+        this.tag3 = tag3;
     }
 
     public String getTag1() {

@@ -63,7 +63,7 @@ public class UploadBean implements Serializable{
     }
 
     public void setDown_num(Integer down_num) {
-        this.file_id = down_num;
+        this.down_num = down_num;
     }
 
     public Integer getFile_id() {

@@ -13,11 +13,12 @@ public class FileInterFacceBean {
     private String uploader;//上传者,用户名
     private String downloader;//下载者
     private String type;//资源类型(word ppt pdf 视频
-    private String tag0;//资源分类
     private String tag1;
     private String tag2;
+    private String tag3;//资源分类
     private Integer isdel;
     private Integer urlType;
+    private Integer sort;//排序0是时间，1是下载量
 
     public Integer getId() {
         return id;
@@ -31,8 +32,8 @@ public class FileInterFacceBean {
         return fileid;
     }
 
-    public String getTag0() {
-        return tag0;
+    public String getTag3() {
+        return tag3;
     }
 
     public String getTag1() {
@@ -95,8 +96,8 @@ public class FileInterFacceBean {
         this.id = id;
     }
 
-    public void setTag0(String tag0) {
-        this.tag0 = tag0;
+    public void setTag3(String tag0) {
+        this.tag3 = tag3;
     }
 
     public void setTag1(String tag1) {
@@ -113,6 +114,14 @@ public class FileInterFacceBean {
 
     public void setUrlType(Integer urlType) {
         this.urlType = urlType;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    public Integer getSort() {
+        return sort;
     }
 
     public FileInterFacceBean(){ }

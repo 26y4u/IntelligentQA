@@ -78,7 +78,7 @@ public class FileController {
                     fileinertfacebean.setId(file.getId());
                     fileinertfacebean.setFileid(file.getId());
                     fileinertfacebean.setTitle(file.getFileName());
-                    fileinertfacebean.setTag0(file.getTag0());
+                    fileinertfacebean.setTag3(file.getTag3());
                     fileinertfacebean.setTag1(file.getTag1());
                     fileinertfacebean.setTag2(file.getTag2());
                     fileinertfacebean.setDownloads(uploadrecord.getDown_num());
@@ -109,7 +109,7 @@ public class FileController {
                 //返回：文件名，文件id，下载量，上传用户名，标题，，类型
                 fileinertfacebean.setFileid(file.getId());
                 fileinertfacebean.setTitle(file.getFileName());
-                fileinertfacebean.setTag0(file.getTag0());
+                fileinertfacebean.setTag3(file.getTag3());
                 fileinertfacebean.setTag1(file.getTag1());
                 fileinertfacebean.setTag2(file.getTag2());
                 fileinertfacebean.setDownloads(uploadrecord.getDown_num());
@@ -141,7 +141,7 @@ public class FileController {
                     //返回：文件名，文件id，上传用户名，类型
                     fileinertfacebean.setFileid(file.getId());
                     fileinertfacebean.setTitle(file.getFileName());
-                    fileinertfacebean.setTag0(file.getTag0());
+                    fileinertfacebean.setTag3(file.getTag3());
                     fileinertfacebean.setTag1(file.getTag1());
                     fileinertfacebean.setTag2(file.getTag2());
                     fileinertfacebean.setUploader(user.getUsername());
@@ -156,14 +156,25 @@ public class FileController {
     @Transactional
     @PostMapping("/findByTag")
     public JsonResult findByTag(@RequestBody FileInterFacceBean bean) {
+
         List<FileInterFacceBean> fileinterface = new ArrayList<>();
         List<FileBean> filelist = new ArrayList<>();
-        if ( bean.getTag2()!=null && bean.getTag2()!="全部")//先看子标签（最细化的），如果小的分类下有文件则返回
+        if(bean.getSort()==0){
+        if ( bean.getTag3()!=null && bean.getTag3()!="全部")//先看子标签（最细化的），如果小的分类下有文件则返回
+            filelist = fileRepository.findByTG3(bean.getTag3());
+        if (bean.getTag3() != null)
             filelist = fileRepository.findByTG2(bean.getTag2());
         if (bean.getTag1() != null)
             filelist = fileRepository.findByTG1(bean.getTag1());
-        if (bean.getTag0() != null)
-            filelist = fileRepository.findByTG0(bean.getTag0());
+        }else
+        {
+            if ( bean.getTag3()!=null && bean.getTag3()!="全部")//先看子标签（最细化的），如果小的分类下有文件则返回
+                filelist = fileRepository.findByTG3Sort(bean.getTag3());
+            if (bean.getTag3() != null)
+                filelist = fileRepository.findByTG2Sort(bean.getTag2());
+            if (bean.getTag1() != null)
+                filelist = fileRepository.findByTG1Sort(bean.getTag1());
+        }
         FileBean file = new FileBean();
         SqsxUser user = new SqsxUser();
         UploadBean upload = new UploadBean();
@@ -175,7 +186,7 @@ public class FileController {
             //返回：文件名，文件id，下载量，上传用户名，标题，，类型
             fileinertfacebean.setFileid(file.getId());
             fileinertfacebean.setTitle(file.getFileName());
-            fileinertfacebean.setTag0(file.getTag0());
+            fileinertfacebean.setTag3(file.getTag3());
             fileinertfacebean.setTag1(file.getTag1());
             fileinertfacebean.setTag2(file.getTag2());
             fileinertfacebean.setDownloads(upload.getDown_num());
@@ -206,7 +217,7 @@ public class FileController {
             //返回：文件名，文件id，下载量，上传用户名，标题，，类型
             fileinertfacebean.setFileid(file.getId());
             fileinertfacebean.setTitle(file.getFileName());
-            fileinertfacebean.setTag0(file.getTag0());
+            fileinertfacebean.setTag3(file.getTag3());
             fileinertfacebean.setTag1(file.getTag1());
             fileinertfacebean.setTag2(file.getTag2());
             fileinertfacebean.setDownloads(upload.getDown_num());
@@ -239,7 +250,7 @@ public class FileController {
                 //返回：文件名，文件id，下载量，上传用户名，标题，，类型
                 fileinertfacebean.setFileid(file.getId());
                 fileinertfacebean.setTitle(file.getFileName());
-                fileinertfacebean.setTag0(file.getTag0());
+                fileinertfacebean.setTag3(file.getTag3());
                 fileinertfacebean.setTag1(file.getTag1());
                 fileinertfacebean.setTag2(file.getTag2());
                 fileinertfacebean.setDownloads(upload.getDown_num());
@@ -256,7 +267,7 @@ public class FileController {
     @Transactional
     //@RequestMapping(value = "/upLoad", method = RequestMethod.POST)
     @PostMapping("/upload")
-    public JsonResult singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("filename") String filename,@RequestParam("tag1") String tag0, @RequestParam("tag2") String tag1,@RequestParam("tag3") String tag2,@RequestParam("type") String type, HttpServletRequest request) throws IOException {
+    public JsonResult singleFileUpload(@RequestParam("file") MultipartFile file,@RequestParam("filename") String filename,@RequestParam("tag1") String tag1, @RequestParam("tag2") String tag2,@RequestParam("tag3") String tag3,@RequestParam("type") String type, HttpServletRequest request) throws IOException {
         //文件名，真正传的文件，tag是搜索用的：有可能tag3是“所有”即显示tag2下的所有类型文件。type是用户选的文件类型。下载和预览是一个接口方法，type1是预览啥的
         //获取 用户名，文件名，md5码将文件存到file和upload中。7/11日更改需求：同一个文件也要在数据库中存多次md5码
         //管理员不可上传资源
@@ -268,19 +279,22 @@ public class FileController {
                     //7/13日更改需求：前端再给一个新的用户名（用户可自己在写一个文件名，在file表中存这个，文件类型也是用户自己选的在filename中加上）
                     FileBean fileup = new FileBean();
                     String title = filename;
-                    fileup.setMd5(QiniuUtil.upload(file, title + type));//返回的是七牛云反馈的string的hash码
+                    fileup.setMd5(QiniuUtil.upload(file, title +"."+ type));//返回的是七牛云反馈的string的hash码
                     fileup.setType(type);
-                    fileup.setTag0(tag0);
+                    fileup.setTag3(tag3);
                     fileup.setTag1(tag1);
                     fileup.setTag2(tag2);
-                    fileup.setFileName(title + type);
+                    fileup.setFileName(title +"."+ type);
                     fileup.setIsdel(0);
                     fileRepository.save(fileup);
 
                     UploadBean upload = new UploadBean();
                     upload.setUser_id(user.getId());
                     upload.setFile_id(fileup.getId());
-                    upload.setDown_num(0);
+                    int file_id = fileup.getId();
+                    int fID = upload.getFile_id();
+                    int a = 0;
+                    upload.setDown_num(a);
                     upload.setTime(GetTime.getTime());
                     upload.setIsdel(0);
                     uploadRepository.save(upload);
