@@ -150,7 +150,6 @@ public class FileController {
                 }
                 return JsonResult.ok(fileinterface);
             }
-            // return JsonResult.ok();
         }else return JsonResult.refuseforlimit("游客请先登录");
     }
 
@@ -216,8 +215,6 @@ public class FileController {
 
             fileinterface.add(fileinertfacebean);
         }
-
-
         return JsonResult.ok(fileinterface);
 }
 
@@ -231,8 +228,8 @@ public class FileController {
         SqsxUser user = new SqsxUser();
         UploadBean upload = new UploadBean();
         FileBean file = new FileBean();
-        filelist = fileRepository.selectByFileName(bean.getTitle());
 
+        filelist = fileRepository.selectbyfilenameorusername(bean.getTitle(),bean.getUploader());
         if(filelist != null) {
             for (int i = 0; i < filelist.size(); i++) {
                 file = filelist.get(i);
@@ -250,30 +247,6 @@ public class FileController {
                 fileinertfacebean.setType(file.getType());
 
                 fileinterface.add(fileinertfacebean);
-            }
-        }else ;
-
-        user = sqsxuserRepository.findByUserName(bean.getUploader());
-        if(user!=null) {
-            List<UploadBean> uploadt = uploadRepository.selectByUserId(user.getId());
-            if (uploadt == null || uploadt.size() == 0) {
-                return JsonResult.returnnull("该用户没有上传文件的记录");
-            } else {
-                for (int i = 0; i < uploadt.size(); i++) {
-                    UploadBean uploadrecord = uploadt.get(i);//取出fileid
-                    FileBean filet = fileRepository.selectByFileId(uploadrecord.getFile_id());
-                    FileInterFacceBean fileinertfacebean = new FileInterFacceBean();
-                    //返回：文件名，文件id，下载量，上传用户名，标题，，类型
-                    fileinertfacebean.setFileid(filet.getId());
-                    fileinertfacebean.setTitle(filet.getFileName());
-                    fileinertfacebean.setTag0(filet.getTag0());
-                    fileinertfacebean.setTag1(filet.getTag1());
-                    fileinertfacebean.setTag2(filet.getTag2());
-                    fileinertfacebean.setDownloads(uploadrecord.getDown_num());
-                    fileinertfacebean.setUploader(user.getUsername());
-                    fileinertfacebean.setType(filet.getType());
-                    fileinterface.add(fileinertfacebean);
-                }
             }
         }else ;
         return JsonResult.ok(fileinterface);
